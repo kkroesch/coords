@@ -8,14 +8,6 @@ MIN_SEC_PATTERN = r"(?P<minutes>\d+)'(?P<seconds>\d+\.?\d*)\""
 DEG_PATTERN = r"(?P<compass>[NSEW])?\s?(?P<degrees>\d+)°"
 coord_pattern = re.compile(DEG_PATTERN + MIN_SEC_PATTERN)
 
-"""
-if sys.argv[1] and sys.argv[2]:
-    lat = sys.argv[1]
-    lng = sys.argv[2]
-else:
-    lat = raw_input("Enter coordinates (lat): ")
-    lng = raw_input("Enter coordinates (lng): ")
-"""
 
 def parse(lat, lng):
     m = re.match(coord_pattern, lat)
@@ -60,3 +52,17 @@ def decimal_minutes(lat, lng):
         lng['hemisphere'], lng['deg'], longitude,
         prec=3
     )
+
+
+if __name__ == '__main__':
+    if sys.argv[1] and sys.argv[2]:
+        lat = sys.argv[1]
+        lng = sys.argv[2]
+    else:
+        lat = raw_input("Enter coordinates (lat): ")
+        lng = raw_input("Enter coordinates (lng): ")
+
+    lat,lng = parse(lat, lng)
+
+    print decimal(lat, lng)
+    print decimal_minutes(lat, lng)
