@@ -19,7 +19,7 @@ def parse(lat, lng):
         "min": int(coord_dict['minutes']),
         "sec": float(coord_dict['seconds'])
     }
-    assert lat['deg'] >= 0 and lat['deg'] <= 90
+    assert 0 <= lat['deg'] <= 90
     assert lat['hemisphere'] == 'N' or lat['hemisphere'] == 'S'
 
     m = re.match(coord_pattern, lng)
@@ -31,7 +31,7 @@ def parse(lat, lng):
         "min": int(coord_dict['minutes']),
         "sec": float(coord_dict['seconds'])
     }
-    assert lng['deg'] >= 0 and lng['deg'] <= 180
+    assert 0 <= lng['deg'] <= 180
     assert lng['hemisphere'] == 'E' or lng['hemisphere'] == 'W'
 
     return lat, lng

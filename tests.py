@@ -20,9 +20,9 @@ class TestConverter(unittest.TestCase):
         self.assertEquals(53, lng['sec'])
 
     def test_malformed(self):
-        lat = "N47°40'46.900\""
+        lat = "N91°40'46.900\""
         lng = "E183°54'53.000\""
-        #self.assertRaises(AssertionError, convert.parse(lat, lng))
+        self.assertRaises(AssertionError, convert.parse, lat, lng)
 
     def test_decimal(self):
         lat = "N47°40'46.900\""
