@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
-import unittest
+import itertools
+from unittest import TestCase
 
 import convert
+from coords import WgsLocation, SwissLocation, MaidenheadLocation, furthest_away
 
-class TestConverter(unittest.TestCase):
+class TestConverter(TestCase):
 
     def test_parse(self):
         lat = "N47°40'46.900\""
@@ -37,5 +39,35 @@ class TestConverter(unittest.TestCase):
         self.assertEquals('N 47° 40.782" E 7° 54.883"', convert.decimal_minutes(lat, lng))
 
 
-if __name__ == '__main__':
-    unittest.main()
+class CoordTest(TestCase):
+
+    def test_wgs_distance(self):
+        bonn = WgsLocation(50.738, 7.1)
+        dulliken = WgsLocation(47.35, 7.9)
+        assert 370 < (bonn - dulliken) < 390
+    
+    def test_ch_distance(self):
+        dulliken = SwissLocation(638323, 244782)
+        zürich = SwissLocation(683354, 247353)
+        assert 40 < (zürich - dulliken) < 50
+
+    def test_maidenhead_distance(self):
+        dulliken = MaidenheadLocation("JN37xi")
+        zürich = MaidenheadLocation("JN47gi")
+        assert 40 < (zürich - dulliken) < 50
+
+    def test_maidenhead_bearing(self):
+        dulliken = MaidenheadLocation("JN37xi")
+        stein = MaidenheadLocation("JN37xn")
+        bearing = dulliken.bearing_to(stein)
+        assert bearing == 0.0
+        zürich = MaidenheadLocation("JN47gi")
+        assert dulliken.bearing_to(zürich) > 273.0
+
+    def test_furthest_city(self):
+        dulliken = MaidenheadLocation("JN37xi")
+        zürich = MaidenheadLocation("JN47gi")
+        san_francisco = MaidenheadLocation("CM87ts")
+        furthest = furthest_away(*[dulliken, zürich, san_francisco])
+        assert furthest[1] == san_francisco
+        assert furthest[0] > 9000

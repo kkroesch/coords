@@ -64,5 +64,5 @@ if __name__ == '__main__':
 
     lat,lng = parse(lat, lng)
 
-    print decimal(lat, lng)
-    print decimal_minutes(lat, lng)
+    print(decimal(lat, lng))
+    print(decimal_minutes(lat, lng))
