@@ -26,14 +26,24 @@ class WgsLocation:
     longitude: float
 
     def __sub__(self, other):
-        # Gets the distance in kilometers between two locations (Haversine formula).
+        """ Gets the distance in kilometers between two locations (Haversine formula). """
         assert issubclass(other.__class__, WgsLocation), "Must be WGS location"
         a = 0.5 - cos((self.latitude - other.latitude) * π / 180) / 2 + \
               cos(self.latitude * π / 180) * cos(other.latitude * π / 180) * \
             (1 - cos((other.longitude - self.longitude) * π / 180)) / 2
         return 2 * R_EARTH * asin(sqrt(a))
 
+    def course_to(self, other):
+        """ Gets the compass direction to other coordinate. """
+        assert issubclass(other.__class__, WgsLocation), "Must be WGS location"
+        dist_long = (other.longitude - self.longitude)
+        y = sin(dist_long) * cos(other.latitude)
+        x = cos(self.latitude) * sin(other.latitude) - \
+            sin(self.latitude) * cos(other.latitude) * cos(dist_long)
+        bearing = atan2(y, x)
+        return (bearing * 180 / π + 360) % 360
 
+    
 @dataclass
 class MaidenheadLocation(WgsLocation):
     locator: str
@@ -54,13 +64,7 @@ class MaidenheadLocation(WgsLocation):
             self.longitude = (((c1 * 20) + (c3 * 2)) - 180)
 
     def bearing_to(self, other):
-        assert issubclass(other.__class__, WgsLocation), "Must be WGS location"
-        dist_long = (other.longitude - self.longitude)
-        y = sin(dist_long) * cos(other.latitude)
-        x = cos(self.latitude) * sin(other.latitude) - \
-            sin(self.latitude) * cos(other.latitude) * cos(dist_long)
-        bearing = atan2(y, x)
-        return (bearing * 180 / π + 360) % 360
+        return self.course_to(other)
 
 
 def furthest_away(*locations):

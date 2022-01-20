@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import itertools
-from unittest import TestCase
+from unittest import TestCase, main as unittest_main
 
 import convert
 from coords import WgsLocation, SwissLocation, MaidenheadLocation, furthest_away
@@ -12,14 +12,14 @@ class TestConverter(TestCase):
         lat = "N47°40'46.900\""
         lng = "E007°54'53.000\""
         lat, lng = convert.parse(lat, lng)
-        self.assertEquals('N', lat['hemisphere'])
-        self.assertEquals('E', lng['hemisphere'])
-        self.assertEquals(47, lat['deg'])
-        self.assertEquals(7, lng['deg'])
-        self.assertEquals(40, lat['min'])
-        self.assertEquals(54, lng['min'])
-        self.assertEquals(46.9, lat['sec'])
-        self.assertEquals(53, lng['sec'])
+        self.assertEqual('N', lat['hemisphere'])
+        self.assertEqual('E', lng['hemisphere'])
+        self.assertEqual(47, lat['deg'])
+        self.assertEqual(7, lng['deg'])
+        self.assertEqual(40, lat['min'])
+        self.assertEqual(54, lng['min'])
+        self.assertEqual(46.9, lat['sec'])
+        self.assertEqual(53, lng['sec'])
 
     def test_malformed(self):
         lat = "N91°40'46.900\""
@@ -30,13 +30,13 @@ class TestConverter(TestCase):
         lat = "N47°40'46.900\""
         lng = "E007°54'53.000\""
         lat, lng = convert.parse(lat, lng)
-        self.assertEquals('N47.67969 E7.91472', convert.decimal(lat, lng))
+        self.assertEqual('N47.67969 E7.91472', convert.decimal(lat, lng))
 
     def test_decimal_minutes(self):
         lat = "N47°40'46.900\""
         lng = "E007°54'53.000\""
         lat, lng = convert.parse(lat, lng)
-        self.assertEquals('N 47° 40.782" E 7° 54.883"', convert.decimal_minutes(lat, lng))
+        self.assertEqual('N 47° 40.782" E 7° 54.883"', convert.decimal_minutes(lat, lng))
 
 
 class CoordTest(TestCase):
@@ -71,3 +71,7 @@ class CoordTest(TestCase):
         furthest = furthest_away(*[dulliken, zürich, san_francisco])
         assert furthest[1] == san_francisco
         assert furthest[0] > 9000
+
+
+if __name__ == '__main__':
+    unittest_main()
