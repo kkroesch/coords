@@ -5,7 +5,7 @@ from tokenize import Double
 from math import pi as π, cos, sin, asin, atan2, sqrt
 from itertools import combinations
 
-R_EARTH = 6371 
+R_EARTH = 6371  # Radius of the earth in km
 
 
 @dataclass
@@ -68,7 +68,7 @@ class MaidenheadLocation(WgsLocation):
 
 
 def furthest_away(*locations):
-    # Returns the location that is furthest away from all others
+    # Returns the location that is furthest away from the others
     assert len(locations) > 1, "Must have at least 2 locations"
     pairs = combinations(locations, 2)
     distances = [a - b for (a, b) in pairs]

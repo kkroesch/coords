@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import itertools
-from unittest import TestCase, main as unittest_main
+from unittest import TestCase, main as unittest_main, skip
 
 import convert
 from coords import WgsLocation, SwissLocation, MaidenheadLocation, furthest_away
@@ -71,6 +71,23 @@ class CoordTest(TestCase):
         furthest = furthest_away(*[dulliken, zürich, san_francisco])
         assert furthest[1] == san_francisco
         assert furthest[0] > 9000
+
+    @skip
+    def test_load_data(self):
+        import yaml
+        import json
+        with open("fixtures.yml") as stream:
+            fix = yaml.load(stream, Loader=yaml.Loader)
+            locations = fix['locations']
+            jl = list()
+            for key, value in locations.items():
+                m = MaidenheadLocation(value)
+                jl.append({
+                    'name': key, 
+                    'lat': m.latitude, 
+                    'lon': m.longitude}
+                )
+            print(json.dumps(jl, indent=4))
 
 
 if __name__ == '__main__':
